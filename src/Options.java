@@ -46,29 +46,25 @@ public class Options extends JPanel implements ActionListener {
 		if(e.getSource() == threeButton) {
 			rowSize = 3;
 			columnSize = 3;
-			grid.update(this);
 		}
 		else if(e.getSource() == fiveButton) {
 			rowSize = 5;
 			columnSize = 5;
-			grid.update(this);
 		}
 		else if (e.getSource() == sevenButton) {
 			rowSize = 7;
 			columnSize = 7;
-			grid.update(this);
 		}
 		else if (e.getSource() == customButton) {
 			try {
 				rowSize = Integer.parseInt(row.getText());
 				columnSize = Integer.parseInt(column.getText());
-				grid.update(this);
 			}
 			catch(NumberFormatException exception){
 				exception.printStackTrace();
 			}
 		}
-
+		grid.update(this);
 			
 	}
 	
