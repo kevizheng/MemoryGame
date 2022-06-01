@@ -23,29 +23,53 @@ public class Grid extends JPanel implements ActionListener{
 	}
 	
 	public void initialize() {
+		this.removeAll();
 		this.setLayout(new GridLayout(rowSize, columnSize));
-		buildAnswer();
-		buildAnswerGrid();
+		buildBlankGrid();
+		this.revalidate();
+		this.repaint();
 		// Insert command to countdown how long the player has left to look at the board
 		//clearBoard();
 		// Insert command to countdown how long the player has to fill in the board
 		//buildInput();
 	}
 
+	// Updates the blank board whenever the player clicks a new size
 	public void update(Options optionPane) {
-		this.removeAll();
 		this.optionPane = optionPane;
 		this.rowSize = optionPane.getRowSize();
 		this.columnSize = optionPane.getColumnSize();
 		initialize();
-		this.revalidate();
-		this.repaint();
 	}
+	
+	public void startGame() {
+		buildAnswer();
+		buildAnswerGrid();
+	}
+	
+	public void shutDown() {
+		for(JButton button : answerButtons) {
+			button.setEnabled(false);
+		}
+	}
+	
+	private void buildBlankGrid() {
+		for(int i = 0; i < rowSize * columnSize; i++) {
+			JButton temp = new JButton();
+			temp.setBackground(Color.WHITE);
+			temp.addActionListener(this);
+			temp.setVisible(true);
+			this.add(temp);
+		}
+	}
+	
 	private void buildAnswerGrid() {
+		this.removeAll();
 		answerButtons = new JButton[rowSize * columnSize];
 		for(int i = 0; i < rowSize * columnSize; i++) {
 			JButton temp = new JButton();
 			temp.addActionListener(this);
+			temp.setEnabled(false);
 			if(answer[i] == 0) {
 				temp.setBackground(Color.WHITE);
 			}
