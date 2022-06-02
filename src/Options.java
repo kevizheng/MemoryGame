@@ -15,12 +15,16 @@ public class Options extends JPanel implements ActionListener {
 	private JButton fiveButton = new JButton("5x5");
 	private JButton sevenButton = new JButton("7x7");
 	private JButton customButton = new JButton("Custom:");
+	private JButton restart = new JButton("Restart");
 	private JTextField row = new JTextField("Row");
 	private JTextField column = new JTextField("Column");
 	private JButton start = new JButton("Start");
 	int rowSize = 3;
 	int columnSize = 3;
 	private Grid grid;
+	private Submit submission;
+	private Timer showAnswer = new Timer();
+	private	Timer loseInput = new Timer();
 	
 	
 	public Options() {
@@ -30,6 +34,7 @@ public class Options extends JPanel implements ActionListener {
 		sevenButton.addActionListener(this);
 		customButton.addActionListener(this);
 		start.addActionListener(this);
+		restart.addActionListener(this);
 		add(threeButton);
 		add(fiveButton);
 		add(sevenButton);
@@ -37,6 +42,7 @@ public class Options extends JPanel implements ActionListener {
 		add(row);
 		add(column);
 		add(start);
+		add(restart);
 		setVisible(true);
 	}
 	
@@ -70,6 +76,9 @@ public class Options extends JPanel implements ActionListener {
 				exception.printStackTrace();
 			}
 		}
+		else if (e.getSource() == restart) {
+			changeEditable(true);
+		}
 		grid.update(this);
 		if (e.getSource() == start) {
 			changeEditable(false);
@@ -79,9 +88,9 @@ public class Options extends JPanel implements ActionListener {
 				public void run() {
 					grid.initialize();
 					JOptionPane.showMessageDialog(null, "BEGIN!", "This is to annoy you", JOptionPane.INFORMATION_MESSAGE);
+					submission.gameStart();
 				}
 			}
-			Timer showAnswer = new Timer();
 			TimerTask inputTime = new allowInput();
 			showAnswer.schedule(inputTime, 15000);
 			
@@ -92,8 +101,7 @@ public class Options extends JPanel implements ActionListener {
 					JOptionPane.showMessageDialog(null, "You didn't hit submit in time :(", "Better Luck Next Time", JOptionPane.INFORMATION_MESSAGE);
 				}
 			}
-			
-			Timer loseInput = new Timer();
+			loseInput = new Timer();
 			TimerTask lose = new ranOutOfTime();
 			loseInput.schedule(lose, 30000);
 			
@@ -108,11 +116,19 @@ public class Options extends JPanel implements ActionListener {
 		row.setEditable(settingValue);
 		column.setEditable(settingValue);
 		start.setEnabled(settingValue);
+		restart.setEnabled(settingValue);
 	}
 	
 	public void setGrid(Grid grid) {
 		this.grid = grid;
 	}
 
+	public void setSubmission(Submit submission) {
+		this.submission = submission;
+	}
 	
+	public void allowRestart() {
+		restart.setEnabled(true);
+		loseInput.cancel();
+	}
 }

@@ -16,22 +16,20 @@ public class Grid extends JPanel implements ActionListener{
 	private int[] answer;
 	private JButton[] answerButtons;
 	private int[] input;
+	private JButton[] inputButtons;
 	private Options optionPane;
 	
 	public Grid() {
 		super();
 	}
 	
+	// Initializes the board that the player will edit
 	public void initialize() {
 		this.removeAll();
 		this.setLayout(new GridLayout(rowSize, columnSize));
 		buildBlankGrid();
 		this.revalidate();
 		this.repaint();
-		// Insert command to countdown how long the player has left to look at the board
-		//clearBoard();
-		// Insert command to countdown how long the player has to fill in the board
-		//buildInput();
 	}
 
 	// Updates the blank board whenever the player clicks a new size
@@ -42,27 +40,34 @@ public class Grid extends JPanel implements ActionListener{
 		initialize();
 	}
 	
+	// Builds the answer grid and stores the answer
 	public void startGame() {
 		buildAnswer();
 		buildAnswerGrid();
 	}
 	
+	// Disables all buttons
 	public void shutDown() {
-		for(JButton button : answerButtons) {
+		for(JButton button : inputButtons) {
 			button.setEnabled(false);
 		}
 	}
 	
+	// Adds the buttons to the frame 
 	private void buildBlankGrid() {
+		inputButtons = new JButton[rowSize * columnSize];
 		for(int i = 0; i < rowSize * columnSize; i++) {
 			JButton temp = new JButton();
 			temp.setBackground(Color.WHITE);
 			temp.addActionListener(this);
 			temp.setVisible(true);
 			this.add(temp);
+			inputButtons[i] = temp;
 		}
 	}
 	
+	
+	// Clears the board then adds the pattern the player has to memorize to the board
 	private void buildAnswerGrid() {
 		this.removeAll();
 		answerButtons = new JButton[rowSize * columnSize];
@@ -83,13 +88,7 @@ public class Grid extends JPanel implements ActionListener{
 		this.repaint();
 	}
 	
-	private void clearBoard() {
-		for(int i = 0; i < rowSize * columnSize; i++) {
-			answerButtons[i].setBackground(Color.WHITE);
-		}
-		repaint();
-	}
-	
+	// Randomly selects what spaces should be blue and white.
 	private void buildAnswer() {
 		Random chance = new Random();
 		answer = new int[rowSize * columnSize];
@@ -104,9 +103,9 @@ public class Grid extends JPanel implements ActionListener{
 		}
 	}
 	
-	private void buildInput() {
+	public void buildInput() {
 		for(int i = 0; i < answerButtons.length; i++) {
-			if(answerButtons[i].getBackground() == Color.WHITE) {
+			if(inputButtons[i].getBackground() == Color.WHITE) {
 				input[i] = 0;
 			}
 			else {

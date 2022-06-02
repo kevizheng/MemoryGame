@@ -11,11 +11,14 @@ public class Game extends JFrame{
 		grid.setOptionPane(options);
 		options.setGrid(grid);
 		grid.initialize();
-		submit = new Submit(grid.getAnswer(), grid.getInput());
+		submit = new Submit();
+		options.setSubmission(submit);
+		submit.setGrid(grid);
+		submit.setOptions(options);
 		this.add(options, BorderLayout.EAST);
 		this.add(submit, BorderLayout.SOUTH);
 		this.add(grid);
-		this.setSize(1000, 1000);
+		this.setSize(650, 650);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
 	}
