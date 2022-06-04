@@ -73,7 +73,7 @@ public class Options extends JPanel implements ActionListener {
 				columnSize = Integer.parseInt(column.getText());
 			}
 			catch(NumberFormatException exception){
-				exception.printStackTrace();
+				JOptionPane.showMessageDialog(null,  "Please enter a number into the row and column text field.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		else if (e.getSource() == restart) {
