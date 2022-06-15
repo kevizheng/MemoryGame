@@ -8,7 +8,6 @@ import javax.swing.JPanel;
 
 public class Submit extends JPanel implements ActionListener{
 	private JButton submit = new JButton("Submit");
-	private JButton reset = new JButton("Reset");
 	private JLabel score;
 	private int[] answer;
 	private int[] input;
@@ -18,13 +17,10 @@ public class Submit extends JPanel implements ActionListener{
 	
 	public Submit() {
 		super();
-		this.setLayout(new GridLayout(3, 1));
+		this.setLayout(new GridLayout(2, 1));
 		submit.addActionListener(this);
-		reset.addActionListener(this);
-		reset.setEnabled(false);
 		submit.setEnabled(false);
 		this.add(submit);
-		this.add(reset);
 		this.setVisible(true);
 	}
 
@@ -34,19 +30,23 @@ public class Submit extends JPanel implements ActionListener{
 			grid.buildInput();
 			this.answer = grid.getAnswer();
 			this.input = grid.getInput();
+			int total = 0;
 			for(int i = 0; i < answer.length; i++) {
-				if(answer[i] == input[i]) {
+				if(answer[i] == input[i] && answer[i] == 1) {
 					correct++;
 				}
+				if(answer[i] == 1) {
+					total++;
+				}
+				if(answer[i] == 0 && input[i] == 1) {
+					correct--;
+				}
 			}
-			score = new JLabel("Your accuracy is: " + (correct * 1.0)/answer.length * 100 + "%");
+			score = new JLabel("Your accuracy is: " + Math.round((correct * 1.0)/total * 100) + "%");
 			this.add(score);
 			correct = 0;
 			grid.shutDown();
 			submit.setEnabled(false);
-		}
-		else if(e.getSource() == reset) {
-			changeEditable(false);
 			option.restart();
 		}
 		this.revalidate();
@@ -55,11 +55,9 @@ public class Submit extends JPanel implements ActionListener{
 	
 	public void gameStart() {
 		this.removeAll();
-		this.setLayout(new GridLayout(3, 1));
+		this.setLayout(new GridLayout(2, 1));
 		this.add(submit);
-		this.add(reset);
 		submit.setEnabled(true);
-		reset.setEnabled(true);
 	}
 
 	public void setGrid(Grid grid) {
@@ -70,8 +68,4 @@ public class Submit extends JPanel implements ActionListener{
 		this.option = option;
 	}
 	
-	private void changeEditable(boolean value) {
-		reset.setEnabled(value);
-		submit.setEnabled(value);
-	}
 }

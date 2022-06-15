@@ -47,8 +47,14 @@ public class Grid extends JPanel implements ActionListener{
 	
 	// Disables all buttons
 	public void shutDown() {
-		for(JButton button : inputButtons) {
-			button.setEnabled(false);
+		for(int i = 0; i < inputButtons.length; i++) {
+			inputButtons[i].setEnabled(false);
+			if(answer[i] == 1 && input[i] == 0) {
+				inputButtons[i].setBackground(Color.GRAY);
+			}
+			else if(answer[i] == 0 && input[i] == 1) {
+				inputButtons[i].setBackground(Color.RED);
+			}
 		}
 	}
 	
