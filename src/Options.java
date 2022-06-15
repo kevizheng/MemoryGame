@@ -11,16 +11,15 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class Options extends JPanel implements ActionListener {
-	private JButton threeButton = new JButton("3x3");
 	private JButton fiveButton = new JButton("5x5");
+	private JButton sixButton = new JButton("6x6");
 	private JButton sevenButton = new JButton("7x7");
 	private JButton customButton = new JButton("Custom:");
-	private JButton restart = new JButton("Restart");
 	private JTextField row = new JTextField("Row");
 	private JTextField column = new JTextField("Column");
 	private JButton start = new JButton("Start");
-	int rowSize = 3;
-	int columnSize = 3;
+	int rowSize = 5;
+	int columnSize = 5;
 	private Grid grid;
 	private Submit submission;
 	private Timer showAnswer = new Timer();
@@ -28,21 +27,19 @@ public class Options extends JPanel implements ActionListener {
 	
 	
 	public Options() {
-		super(new GridLayout(4,1));
-		threeButton.addActionListener(this);
+		super(new GridLayout(4,0));
 		fiveButton.addActionListener(this);
+		sixButton.addActionListener(this);
 		sevenButton.addActionListener(this);
 		customButton.addActionListener(this);
 		start.addActionListener(this);
-		restart.addActionListener(this);
-		add(threeButton);
 		add(fiveButton);
+		add(sixButton);
 		add(sevenButton);
 		add(customButton);
 		add(row);
 		add(column);
 		add(start);
-		add(restart);
 		setVisible(true);
 	}
 	
@@ -55,9 +52,9 @@ public class Options extends JPanel implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == threeButton) {
-			rowSize = 3;
-			columnSize = 3;
+		if(e.getSource() == sixButton) {
+			rowSize = 6;
+			columnSize = 6;
 		}
 		else if(e.getSource() == fiveButton) {
 			rowSize = 5;
@@ -75,9 +72,6 @@ public class Options extends JPanel implements ActionListener {
 			catch(NumberFormatException exception){
 				JOptionPane.showMessageDialog(null,  "Please enter a number into the row and column text field.", "Error", JOptionPane.ERROR_MESSAGE);
 			}
-		}
-		else if (e.getSource() == restart) {
-			changeEditable(true);
 		}
 		grid.update(this);
 		if (e.getSource() == start) {
@@ -109,14 +103,13 @@ public class Options extends JPanel implements ActionListener {
 	}
 	
 	private void changeEditable(boolean settingValue) {
-		threeButton.setEnabled(settingValue);
+		sixButton.setEnabled(settingValue);
 		fiveButton.setEnabled(settingValue);
 		sevenButton.setEnabled(settingValue);
 		customButton.setEnabled(settingValue);
 		row.setEditable(settingValue);
 		column.setEditable(settingValue);
 		start.setEnabled(settingValue);
-		restart.setEnabled(settingValue);
 	}
 	
 	public void setGrid(Grid grid) {
@@ -127,8 +120,8 @@ public class Options extends JPanel implements ActionListener {
 		this.submission = submission;
 	}
 	
-	public void allowRestart() {
-		restart.setEnabled(true);
+	public void restart() {
+		changeEditable(true);
 		loseInput.cancel();
 	}
 }

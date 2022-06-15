@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 
 public class Submit extends JPanel implements ActionListener{
 	private JButton submit = new JButton("Submit");
+	private JButton reset = new JButton("Reset");
 	private JLabel score;
 	private int[] answer;
 	private int[] input;
@@ -17,10 +18,13 @@ public class Submit extends JPanel implements ActionListener{
 	
 	public Submit() {
 		super();
-		this.setLayout(new GridLayout(2, 0));
+		this.setLayout(new GridLayout(3, 1));
 		submit.addActionListener(this);
+		reset.addActionListener(this);
+		reset.setEnabled(false);
 		submit.setEnabled(false);
 		this.add(submit);
+		this.add(reset);
 		this.setVisible(true);
 	}
 
@@ -40,7 +44,10 @@ public class Submit extends JPanel implements ActionListener{
 			correct = 0;
 			grid.shutDown();
 			submit.setEnabled(false);
-			option.allowRestart();
+		}
+		else if(e.getSource() == reset) {
+			changeEditable(false);
+			option.restart();
 		}
 		this.revalidate();
 		this.repaint();
@@ -48,9 +55,11 @@ public class Submit extends JPanel implements ActionListener{
 	
 	public void gameStart() {
 		this.removeAll();
-		this.setLayout(new GridLayout(2, 0));
+		this.setLayout(new GridLayout(3, 1));
 		this.add(submit);
+		this.add(reset);
 		submit.setEnabled(true);
+		reset.setEnabled(true);
 	}
 
 	public void setGrid(Grid grid) {
@@ -59,5 +68,10 @@ public class Submit extends JPanel implements ActionListener{
 	
 	public void setOptions(Options option) {
 		this.option = option;
+	}
+	
+	private void changeEditable(boolean value) {
+		reset.setEnabled(value);
+		submit.setEnabled(value);
 	}
 }
