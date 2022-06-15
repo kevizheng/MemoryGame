@@ -33,8 +33,7 @@ public class Grid extends JPanel implements ActionListener{
 	}
 
 	// Updates the blank board whenever the player clicks a new size
-	public void update(Options optionPane) {
-		this.optionPane = optionPane;
+	public void update() {
 		this.rowSize = optionPane.getRowSize();
 		this.columnSize = optionPane.getColumnSize();
 		initialize();

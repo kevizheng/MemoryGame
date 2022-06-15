@@ -6,6 +6,7 @@ import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -27,7 +28,7 @@ public class Options extends JPanel implements ActionListener {
 	
 	
 	public Options() {
-		super(new GridLayout(4,0));
+		super(new GridLayout(3,0));
 		fiveButton.addActionListener(this);
 		sixButton.addActionListener(this);
 		sevenButton.addActionListener(this);
@@ -37,8 +38,6 @@ public class Options extends JPanel implements ActionListener {
 		add(sixButton);
 		add(sevenButton);
 		add(customButton);
-		add(row);
-		add(column);
 		add(start);
 		setVisible(true);
 	}
@@ -65,15 +64,32 @@ public class Options extends JPanel implements ActionListener {
 			columnSize = 7;
 		}
 		else if (e.getSource() == customButton) {
-			try {
-				rowSize = Integer.parseInt(row.getText());
-				columnSize = Integer.parseInt(column.getText());
-			}
-			catch(NumberFormatException exception){
-				JOptionPane.showMessageDialog(null,  "Please enter a number into the row and column text field.", "Error", JOptionPane.ERROR_MESSAGE);
-			}
+			JFrame getSize = new JFrame("Enter Row and Column Sizes");
+			getSize.setLayout(new GridLayout(3, 0));
+			JButton submit = new JButton("Submit");
+			getSize.add(new JLabel("Row: "));
+			getSize.add(row);
+			getSize.add(new JLabel("Column: "));
+			getSize.add(column);
+			getSize.setSize(200, 200);
+			getSize.add(submit);
+			submit.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					try {
+					rowSize = Integer.parseInt(row.getText());
+					columnSize = Integer.parseInt(column.getText());
+					grid.update();
+					getSize.dispose();
+					}
+					catch (NumberFormatException n){
+						JOptionPane.showMessageDialog(null,  "Please enter a number into the row and column text field.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+			getSize.setVisible(true);
 		}
-		grid.update(this);
+		grid.update();
 		if (e.getSource() == start) {
 			changeEditable(false);
 			grid.startGame();
@@ -98,7 +114,6 @@ public class Options extends JPanel implements ActionListener {
 			loseInput = new Timer();
 			TimerTask lose = new ranOutOfTime();
 			loseInput.schedule(lose, 30000);
-			
 		}
 	}
 	
