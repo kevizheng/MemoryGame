@@ -68,4 +68,8 @@ public class Submit extends JPanel implements ActionListener{
 		this.option = option;
 	}
 	
+	public void disable() {
+		submit.setEnabled(false);
+	}
+	
 }

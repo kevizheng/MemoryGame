@@ -1,8 +1,7 @@
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,6 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.Timer;
 
 public class Options extends JPanel implements ActionListener {
 	private JButton fiveButton = new JButton("5x5");
@@ -18,28 +18,23 @@ public class Options extends JPanel implements ActionListener {
 	private JButton customButton = new JButton("Custom:");
 	private JTextField row = new JTextField("Row");
 	private JTextField column = new JTextField("Column");
+	private JLabel timer = new JLabel("0");
 	private JButton start = new JButton("Start");
-	int rowSize = 5;
-	int columnSize = 5;
+	private int rowSize = 5;
+	private int columnSize = 5;
+	private int time = 15;
 	private Grid grid;
 	private Submit submission;
-	private Timer showAnswer = new Timer();
-	private	Timer loseInput = new Timer();
+	private Timer showAnswer;
+	private	Timer loseInput;
+	private Timer answerDisplay;
 	
 	
 	public Options() {
-		super(new GridLayout(3,0));
-		fiveButton.addActionListener(this);
-		sixButton.addActionListener(this);
-		sevenButton.addActionListener(this);
-		customButton.addActionListener(this);
-		start.addActionListener(this);
-		add(fiveButton);
-		add(sixButton);
-		add(sevenButton);
-		add(customButton);
-		add(start);
-		setVisible(true);
+		drawOptions();
+		showAnswer = new Timer(15000, allowInput);
+		answerDisplay = new Timer(0, displayTimer);
+		loseInput = new Timer(30000, ranOutOfTime);
 	}
 	
 	public int getRowSize() {
@@ -49,7 +44,35 @@ public class Options extends JPanel implements ActionListener {
 	public int getColumnSize() {
 		return columnSize;
 	}
+	ActionListener displayTimer = new ActionListener(){
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(time <= 0) {
+				time = 15;
+			}
+			timer = new JLabel(String.valueOf(time));
+			drawOptions();
+			revalidate();
+			repaint();
+			time--;
+		}
+	};
+	ActionListener allowInput = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			grid.initialize();
+			submission.gameStart();
+		}
+	};
 	
+	ActionListener ranOutOfTime = new ActionListener(){
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			grid.shutDown();
+			restart();
+			JOptionPane.showMessageDialog(null, "You didn't hit submit in time :(", "Better Luck Next Time", JOptionPane.INFORMATION_MESSAGE);
+		}
+	};
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == sixButton) {
 			rowSize = 6;
@@ -93,27 +116,11 @@ public class Options extends JPanel implements ActionListener {
 		if (e.getSource() == start) {
 			changeEditable(false);
 			grid.startGame();
-			class allowInput extends TimerTask{
-				@Override
-				public void run() {
-					grid.initialize();
-					JOptionPane.showMessageDialog(null, "BEGIN!", "This is to annoy you", JOptionPane.INFORMATION_MESSAGE);
-					submission.gameStart();
-				}
-			}
-			TimerTask inputTime = new allowInput();
-			showAnswer.schedule(inputTime, 15000);
 			
-			class ranOutOfTime extends TimerTask{
-				@Override
-				public void run() {
-					grid.shutDown();
-					JOptionPane.showMessageDialog(null, "You didn't hit submit in time :(", "Better Luck Next Time", JOptionPane.INFORMATION_MESSAGE);
-				}
-			}
-			loseInput = new Timer();
-			TimerTask lose = new ranOutOfTime();
-			loseInput.schedule(lose, 30000);
+			showAnswer.start();
+			answerDisplay.start();
+			loseInput.start();
+			answerDisplay.setDelay(1000);
 		}
 	}
 	
@@ -137,6 +144,27 @@ public class Options extends JPanel implements ActionListener {
 	
 	public void restart() {
 		changeEditable(true);
-		loseInput.cancel();
+		showAnswer.stop();
+		loseInput.stop();
+		answerDisplay.stop();
+		time = 15;
+		
+	}
+	
+	private void drawOptions() {
+		removeAll();
+		setLayout(new GridLayout(3,0));
+		fiveButton.addActionListener(this);
+		sixButton.addActionListener(this);
+		sevenButton.addActionListener(this);
+		customButton.addActionListener(this);
+		start.addActionListener(this);
+		add(fiveButton);
+		add(sixButton);
+		add(sevenButton);
+		add(customButton);
+		add(start);
+		add(timer);
+		setVisible(true);
 	}
 }
