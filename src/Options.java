@@ -68,7 +68,9 @@ public class Options extends JPanel implements ActionListener {
 	ActionListener ranOutOfTime = new ActionListener(){
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			grid.buildInput();
 			grid.shutDown();
+			submission.disable();
 			restart();
 			JOptionPane.showMessageDialog(null, "You didn't hit submit in time :(", "Better Luck Next Time", JOptionPane.INFORMATION_MESSAGE);
 		}
